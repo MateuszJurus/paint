@@ -11,12 +11,17 @@
     <div>
         <div class="sidemenu"></div>
         <div class="file" id="file">
+            <span class="file__layers">Layers: <span id="layerCount"></span></span>
             <span class="file__greeting">Welcome to mini-paint app, to start new file press the "New file" button below</span>
         </div>
         <div></div>
     </div>
     <div class="bottommenu">
         <button class="button--new" onClick="newFile()">New file</button>
+        <div class="bottommenu__position">
+            <span>X:<span id="mouseX"></span></span>
+            <span>Y:<span id="mouseY"></span></span>
+        </div>
     </div>
     <script src="main.js"></script>
 </body>
