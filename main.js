@@ -26,15 +26,51 @@ displayLayerN();
 
 /* --- CREATING NEW CANVAS --- */
 
+class Canvas{
+    constructor(cl,id){
+        this.class = cl;
+        this.id = id;
+        this.canvas = document.createElement('canvas');
+        this.canvas.classList.add('file__canvas');
+        this.canvas.id = "base";
+        this.canvas.setAttribute('width', '598px');
+        this.canvas.setAttribute('height', '598px');
+        app.appendChild(this.canvas);
+        this.c = document.getElementById(this.id);
+    }
+    drawRect(sX,sY,eX,eY){
+        let ctx = this.c.getContext('2d');
+        ctx.fillRect(sX,sY,eX-sX,eY-sY);
+        ctx.stroke();
+
+    }
+}
+
 /* create canvas and append to dom */
 function newFile(){
     clearFile();
-    console.log(mousePosition.x, mousePosition.y)
-    let canvas = document.createElement('canvas');
-    canvas.classList.add('file__canvas');
-    app.appendChild(canvas);
+    const x = new Canvas('file__canvas', 'base');
+    let isPress = 0;
+    let initX = 0;
+    let initY = 0;
+    x.c.addEventListener('mousedown', function(){
+        isPress = 1;
+        initX = mousePosition.x;
+        initY = mousePosition.y;
+    })
+    x.c.addEventListener('mouseup', function(){
+        isPress = 0;
+    })
+    x.c.addEventListener('mousemove', function(){
+        //check if mouse button is pressed
+        if(isPress != 0){
+           x.drawRect(initX,initY,mousePosition.x,mousePosition.y) 
+        }
+    })
+    
     canvasCount++;
     displayLayerN();
+    console.log(isPress)
 } 
 
 /* remove previous canvas if there are any */
@@ -50,5 +86,24 @@ function clearFile(){
 
 /* --- TOOLS --- */
 
-/* brush */
+/* rectangle */
 
+class RectangleFeature {
+    constructor(initX, initY, endX, endY, type, color){
+        this.initX = initX;
+        this.initY = initY;
+        this.endX = endX;
+        this.endY = endY;
+        this.type = type;
+        this.color = color;
+    }
+}
+
+function drawRectangle(sX, sY, eX, eY, col, type){
+    new RectangleFeature(sX, sY, eX, eY, col, type);
+    let c = document.getElementById('base');
+    let ctx = c.getContext('2d');
+    ctx.moveTo(sX, sY);
+    ctx.lineTo(eX, eY);
+    ctx.stroke();
+}
