@@ -38,11 +38,26 @@ class Canvas{
         app.appendChild(this.canvas);
         this.c = document.getElementById(this.id);
     }
+    drawRectOutline(outline,sX,sY,eX,eY){
+        if(sX > eX){
+            outline.style.left = eX + 'px';
+            outline.style.width = Math.abs(sX-eX) + 'px';
+        }else{
+            outline.style.left = sX + 'px';
+            outline.style.width = Math.abs(sX-eX) + 'px';
+        }
+        if(sY > eY){
+            outline.style.top = eY + 'px';
+            outline.style.height = Math.abs(eY-sY) + 'px';
+        }else{
+            outline.style.top = sY + 'px';
+            outline.style.height = Math.abs(sY-eY) + 'px';
+        }
+    }
     drawRect(sX,sY,eX,eY){
         let ctx = this.c.getContext('2d');
         ctx.fillRect(sX,sY,eX-sX,eY-sY);
         ctx.stroke();
-
     }
 }
 
@@ -53,10 +68,13 @@ function newFile(){
     let isPress = 0;
     let initX = 0;
     let initY = 0;
+    let outline = document.createElement('span');
+    outline.classList.add('rectangle__outline');
     x.c.addEventListener('mousedown', function(){
         isPress = 1;
         initX = mousePosition.x;
         initY = mousePosition.y;
+        app.appendChild(outline)
     })
     x.c.addEventListener('mouseup', function(){
         isPress = 0;
@@ -64,7 +82,7 @@ function newFile(){
     x.c.addEventListener('mousemove', function(){
         //check if mouse button is pressed
         if(isPress != 0){
-           x.drawRect(initX,initY,mousePosition.x,mousePosition.y) 
+           x.drawRectOutline(outline,initX,initY,mousePosition.x,mousePosition.y) 
         }
     })
     

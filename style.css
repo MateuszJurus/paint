@@ -79,3 +79,12 @@
     z-index: 2;
     background:transparent;
 }
+
+/* RECTANGLE */
+
+.rectangle__outline{
+    position:absolute;
+    border:solid 1px black;
+    background-color:transparent;
+    pointer-events: none;
+}
