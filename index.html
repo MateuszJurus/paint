@@ -8,12 +8,37 @@
     <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
 </head>
 <body class="body">
-    <div>
+    <div class="canvas__wrapper">
         <div class="file" id="file">
             <span class="file__layers">Layers: <span id="layerCount"></span></span>
             <span class="file__greeting">Welcome to mini-paint app, to start new file press the "New file" button below</span>
         </div>
-        <div class="sidemenu"></div>
+        <div class="sidemenu">
+            <label class="sidemenu__item">
+                <span>Wybierz kolor</span>
+                <input class="input--color" type="color" id="color">
+            </label>
+            <label class="sidemenu__item">
+                <span>Wybierz narzędzie</span>
+                <select id="toolInput">
+                    <option value="1">Pędzel</option>
+                    <option value="2">Prosta</option>
+                    <option value="3">Koło</option>
+                    <option value="4">Prostokąt</option>
+                </select>
+            </label>
+            <div class="sidemenu__item options">
+                    <div class="option option--hidden option--brush" id="settingsBrush"></div>
+                    <div class="option option--hidden option--line" id="settingsLine"></div>
+                    <div class="option option--hidden option--circle" id="settingsCircle"></div>
+                    <div class="option option--hidden option--rectangle" id="settingsRectangle">
+                        <label>
+                            <span>Wypełnienie</span>
+                            <input type="checkbox" id="rectFill" value="true">
+                        </label>
+                    </div>
+            </div>
+        </div>
         <div></div>
     </div>
     <div class="bottommenu">

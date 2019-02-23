@@ -16,6 +16,48 @@ document.addEventListener('mousemove',(e)=>{
     domY.innerText = e.clientY;
 })
 
+/* --- GET CURRENT COLOR --- */
+
+const colorInput = document.getElementById('color');
+let color = 'black';
+colorInput.addEventListener('change', ()=>{
+    color = colorInput.value;
+})
+
+/* --- TOOL SELECTION --- */
+
+let tool = 1;
+const toolInput = document.getElementById('toolInput');
+toolInput.addEventListener('change', ()=>{
+    let t = document.getElementsByClassName('option');
+    for(let i = 0; i < t.length; i++){
+        if(!t[i].classList.contains('option--hidden')){
+            t[i].classList.add('option--hidden')
+        }
+    }
+    tool = parseInt(toolInput.value);
+    switch(tool){
+        case 1:
+            const brushSettings = document.getElementById('settingsBrush')
+            brushSettings.classList.remove('option--hidden');
+            break;  
+        case 2:
+            const lineSettings = document.getElementById('settingsLine')
+            lineSettings.classList.remove('option--hidden');
+            break;  
+        case 3:
+            const circleSettings = document.getElementById('settingsCircle')
+            circleSettings.classList.remove('option--hidden');
+            break;   
+        case 4:
+            const rectSettings = document.getElementById('settingsRectangle')
+            rectSettings.classList.remove('option--hidden');
+            break;         
+    }
+})
+
+
+
 /* DISPLAY NUMBER OF LAYERS */
 
 const layerN = document.getElementById('layerCount');
@@ -38,7 +80,8 @@ class Canvas{
         app.appendChild(this.canvas);
         this.c = document.getElementById(this.id);
     }
-    drawRectOutline(outline,sX,sY,eX,eY){
+    drawRectOutline(outline,sX,sY,eX,eY,color){
+        outline.style.borderColor = color;
         if(sX > eX){
             outline.style.left = eX + 'px';
             outline.style.width = Math.abs(sX-eX) + 'px';
@@ -56,8 +99,22 @@ class Canvas{
     }
     drawRect(sX,sY,eX,eY){
         let ctx = this.c.getContext('2d');
-        ctx.strokeRect(sX,sY,eX-sX,eY-sY);
-        ctx.stroke();
+        let rectFill = document.getElementById('rectFill');
+        if(rectFill.checked){
+            ctx.fillStyle = color;
+            ctx.fillRect(sX,sY,eX-sX,eY-sY);
+            
+        }else{
+            ctx.strokeStyle = color;
+            ctx.strokeRect(sX,sY,eX-sX,eY-sY);
+            
+        }        
+    }
+    drawBrush(x,y,w,color){
+        let ctx = this.c.getContext('2d');
+        ctx.lineWidth = w;
+        ctx.stroke.style = color;
+        ctx.stroke(x,y);
     }
 }
 
@@ -79,18 +136,16 @@ function newFile(){
     x.c.addEventListener('mouseup', function(){
         isPress = 0;
         app.removeChild(outline);
-        x.drawRect(initX,initY,mousePosition.x,mousePosition.y)
+        x.drawRect(initX,initY,mousePosition.x,mousePosition.y,color)
     })
     x.c.addEventListener('mousemove', function(){
         //check if mouse button is pressed
         if(isPress != 0){
-           x.drawRectOutline(outline,initX,initY,mousePosition.x,mousePosition.y) ;
+           x.drawRectOutline(outline,initX,initY,mousePosition.x,mousePosition.y,color) ;
         }
     })
-    
     canvasCount++;
     displayLayerN();
-    console.log(isPress)
 } 
 
 /* remove previous canvas if there are any */
@@ -102,28 +157,4 @@ function clearFile(){
         }
     }
     canvasCount = 0;
-}
-
-/* --- TOOLS --- */
-
-/* rectangle */
-
-class RectangleFeature {
-    constructor(initX, initY, endX, endY, type, color){
-        this.initX = initX;
-        this.initY = initY;
-        this.endX = endX;
-        this.endY = endY;
-        this.type = type;
-        this.color = color;
-    }
-}
-
-function drawRectangle(sX, sY, eX, eY, col, type){
-    new RectangleFeature(sX, sY, eX, eY, col, type);
-    let c = document.getElementById('base');
-    let ctx = c.getContext('2d');
-    ctx.moveTo(sX, sY);
-    ctx.lineTo(eX, eY);
-    ctx.stroke();
 }
