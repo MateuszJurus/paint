@@ -33,8 +33,8 @@ class Canvas{
         this.canvas = document.createElement('canvas');
         this.canvas.classList.add('file__canvas');
         this.canvas.id = "base";
-        this.canvas.setAttribute('width', '598px');
-        this.canvas.setAttribute('height', '598px');
+        this.canvas.setAttribute('width', '498px');
+        this.canvas.setAttribute('height', '498px');
         app.appendChild(this.canvas);
         this.c = document.getElementById(this.id);
     }
@@ -56,7 +56,7 @@ class Canvas{
     }
     drawRect(sX,sY,eX,eY){
         let ctx = this.c.getContext('2d');
-        ctx.fillRect(sX,sY,eX-sX,eY-sY);
+        ctx.strokeRect(sX,sY,eX-sX,eY-sY);
         ctx.stroke();
     }
 }
@@ -78,11 +78,13 @@ function newFile(){
     })
     x.c.addEventListener('mouseup', function(){
         isPress = 0;
+        app.removeChild(outline);
+        x.drawRect(initX,initY,mousePosition.x,mousePosition.y)
     })
     x.c.addEventListener('mousemove', function(){
         //check if mouse button is pressed
         if(isPress != 0){
-           x.drawRectOutline(outline,initX,initY,mousePosition.x,mousePosition.y) 
+           x.drawRectOutline(outline,initX,initY,mousePosition.x,mousePosition.y) ;
         }
     })
     

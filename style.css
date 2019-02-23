@@ -30,7 +30,7 @@
     display: inline-block;
     background-color:var(--lightgrey);
     width:100px;
-    height:600px;
+    height:500px;
 }
 
 /* BOTTOMMENU */
@@ -47,8 +47,8 @@
 /* FILE */
 
 .file{
-    width:600px;
-    height:600px;
+    width:500px;
+    height:500px;
     border:solid 1px #444;
     display: inline-block;
     position: relative;
