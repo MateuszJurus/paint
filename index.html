@@ -28,7 +28,12 @@
                 </select>
             </label>
             <div class="sidemenu__item options">
-                    <div class="option option--hidden option--brush" id="settingsBrush"></div>
+                    <div class="option option--brush" id="settingsBrush">
+                        <label>
+                            <span>Grubość: <span id="currentBrushWidth"></span></span>
+                            <input type="range" id="brushWidth" value="1" min="1" max="20">
+                        </label>
+                    </div>
                     <div class="option option--hidden option--line" id="settingsLine"></div>
                     <div class="option option--hidden option--circle" id="settingsCircle"></div>
                     <div class="option option--hidden option--rectangle" id="settingsRectangle">

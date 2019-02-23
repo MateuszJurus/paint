@@ -1,6 +1,6 @@
 const app = document.getElementById('file');
 let canvasCount = 0;
-
+let currentTool = 1;
 /* --- TRACK MOUSE POSITION --- */
 let mousePosition = {
     x: 0,
@@ -36,6 +36,7 @@ toolInput.addEventListener('change', ()=>{
         }
     }
     tool = parseInt(toolInput.value);
+    currentTool = tool;
     switch(tool){
         case 1:
             const brushSettings = document.getElementById('settingsBrush')
@@ -56,7 +57,16 @@ toolInput.addEventListener('change', ()=>{
     }
 })
 
+/* DISPLAY BRUSH WIDTH */
 
+const currentWidth = document.getElementById('currentBrushWidth');
+const widthInput = document.getElementById('brushWidth');
+let brushWidth = 1;
+currentWidth.innerText = widthInput.value;
+widthInput.addEventListener('input', ()=>{
+    currentWidth.innerText = widthInput.value;
+    brushWidth = widthInput.value;
+})
 
 /* DISPLAY NUMBER OF LAYERS */
 
@@ -70,6 +80,7 @@ displayLayerN();
 
 class Canvas{
     constructor(cl,id){
+        this.tool = tool;
         this.class = cl;
         this.id = id;
         this.canvas = document.createElement('canvas');
@@ -79,6 +90,7 @@ class Canvas{
         this.canvas.setAttribute('height', '498px');
         app.appendChild(this.canvas);
         this.c = document.getElementById(this.id);
+        this.ctx = this.c.getContext('2d');
     }
     drawRectOutline(outline,sX,sY,eX,eY,color){
         outline.style.borderColor = color;
@@ -98,23 +110,23 @@ class Canvas{
         }
     }
     drawRect(sX,sY,eX,eY){
-        let ctx = this.c.getContext('2d');
+        
         let rectFill = document.getElementById('rectFill');
         if(rectFill.checked){
-            ctx.fillStyle = color;
-            ctx.fillRect(sX,sY,eX-sX,eY-sY);
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(sX,sY,eX-sX,eY-sY);
             
         }else{
-            ctx.strokeStyle = color;
-            ctx.strokeRect(sX,sY,eX-sX,eY-sY);
+            this.ctx.strokeStyle = color;
+            this.ctx.strokeRect(sX,sY,eX-sX,eY-sY);
             
         }        
     }
-    drawBrush(x,y,w,color){
-        let ctx = this.c.getContext('2d');
-        ctx.lineWidth = w;
-        ctx.stroke.style = color;
-        ctx.stroke(x,y);
+    drawBrush(sX,sY,w,color){
+        this.ctx.fillStyle = color;
+        this.ctx.beginPath();
+        this.ctx.arc(sX, sY, w, 0, 2 * Math.PI);
+        this.ctx.fill();
     }
 }
 
@@ -125,23 +137,44 @@ function newFile(){
     let isPress = 0;
     let initX = 0;
     let initY = 0;
+    let w = 10;
     let outline = document.createElement('span');
     outline.classList.add('rectangle__outline');
     x.c.addEventListener('mousedown', function(){
         isPress = 1;
         initX = mousePosition.x;
         initY = mousePosition.y;
-        app.appendChild(outline)
+        switch(currentTool){
+            case 1:
+                x.drawBrush(initX,initY,brushWidth,color)
+                break;
+            case 4:
+                app.appendChild(outline);   
+                break;
+        }
     })
     x.c.addEventListener('mouseup', function(){
         isPress = 0;
-        app.removeChild(outline);
-        x.drawRect(initX,initY,mousePosition.x,mousePosition.y,color)
+        switch(currentTool){
+            case 4:
+                app.removeChild(outline);
+                x.drawRect(initX,initY,mousePosition.x,mousePosition.y,color);
+                break;
+        }
     })
     x.c.addEventListener('mousemove', function(){
         //check if mouse button is pressed
         if(isPress != 0){
-           x.drawRectOutline(outline,initX,initY,mousePosition.x,mousePosition.y,color) ;
+           switch(currentTool){
+                case 1:
+                    initX = mousePosition.x;
+                    initY = mousePosition.y;
+                    x.drawBrush(initX,initY,brushWidth,color)
+                    break;
+               case 4:
+                    x.drawRectOutline(outline,initX,initY,mousePosition.x,mousePosition.y,color);
+                    break;
+           }
         }
     })
     canvasCount++;
