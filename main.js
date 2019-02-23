@@ -84,15 +84,15 @@ class Canvas{
         this.class = cl;
         this.id = id;
         this.canvas = document.createElement('canvas');
-        this.canvas.classList.add('file__canvas');
-        this.canvas.id = "base";
-        this.canvas.setAttribute('width', '498px');
+        this.canvas.classList.add(this.class);
+        this.canvas.id = this.id;
+        this.canvas.setAttribute('width', '698px');
         this.canvas.setAttribute('height', '498px');
         app.appendChild(this.canvas);
         this.c = document.getElementById(this.id);
         this.ctx = this.c.getContext('2d');
     }
-    drawRectOutline(outline,sX,sY,eX,eY,color){
+    drawRectOutline(outline,sX,sY,eX,eY){
         outline.style.borderColor = color;
         if(sX > eX){
             outline.style.left = eX + 'px';
@@ -110,7 +110,6 @@ class Canvas{
         }
     }
     drawRect(sX,sY,eX,eY){
-        
         let rectFill = document.getElementById('rectFill');
         if(rectFill.checked){
             this.ctx.fillStyle = color;
@@ -119,14 +118,20 @@ class Canvas{
         }else{
             this.ctx.strokeStyle = color;
             this.ctx.strokeRect(sX,sY,eX-sX,eY-sY);
-            
         }        
     }
-    drawBrush(sX,sY,w,color){
+    drawBrush(sX,sY,w){
         this.ctx.fillStyle = color;
         this.ctx.beginPath();
         this.ctx.arc(sX, sY, w, 0, 2 * Math.PI);
         this.ctx.fill();
+    }
+    drawCircle(sX,sY,eX,eY){
+        let circleFill = document.getElementById('circleFill');
+        if(circleFill.checked){
+            this.ctx.beginPath();
+            this.ctx.arc(sX,sY,eX-sX,eY-sY);
+        }
     }
 }
 
@@ -137,9 +142,10 @@ function newFile(){
     let isPress = 0;
     let initX = 0;
     let initY = 0;
-    let w = 10;
     let outline = document.createElement('span');
     outline.classList.add('rectangle__outline');
+    let cOutline = document.createElement('span');
+    cOutline.classList.add('circle__outline');
     x.c.addEventListener('mousedown', function(){
         isPress = 1;
         initX = mousePosition.x;
@@ -147,6 +153,9 @@ function newFile(){
         switch(currentTool){
             case 1:
                 x.drawBrush(initX,initY,brushWidth,color)
+                break;
+            case 3:
+                app.appendChild(cOutline);
                 break;
             case 4:
                 app.appendChild(outline);   
@@ -156,9 +165,13 @@ function newFile(){
     x.c.addEventListener('mouseup', function(){
         isPress = 0;
         switch(currentTool){
+            case 3:
+                app.removeChild(cOutline);
+                x.drawCircle(initX,initY,mousePosition.x,mousePosition.y)
+                break;
             case 4:
                 app.removeChild(outline);
-                x.drawRect(initX,initY,mousePosition.x,mousePosition.y,color);
+                x.drawRect(initX,initY,mousePosition.x,mousePosition.y);
                 break;
         }
     })
@@ -169,10 +182,13 @@ function newFile(){
                 case 1:
                     initX = mousePosition.x;
                     initY = mousePosition.y;
-                    x.drawBrush(initX,initY,brushWidth,color)
+                    x.drawBrush(initX,initY,brushWidth)
                     break;
-               case 4:
-                    x.drawRectOutline(outline,initX,initY,mousePosition.x,mousePosition.y,color);
+                case 3:
+                    x.drawRectOutline(cOutline,initX,initY,mousePosition.x,mousePosition.y)
+                    break;
+                case 4:
+                    x.drawRectOutline(outline,initX,initY,mousePosition.x,mousePosition.y);
                     break;
            }
         }

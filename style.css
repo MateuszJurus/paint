@@ -64,11 +64,11 @@
 /* FILE */
 
 .canvas__wrapper{
-    width:650px;
+    width:850px;
 }
 
 .file{
-    width:500px;
+    width:700px;
     height:500px;
     border:solid 1px #444;
     display: inline-block;
@@ -103,9 +103,13 @@
 
 /* RECTANGLE */
 
-.rectangle__outline{
+.rectangle__outline, .circle__outline{
     position:absolute;
     border:solid 1px;
     background-color:transparent;
     pointer-events: none;
+}
+
+.circle__outline{
+    border-radius:100%;
 }

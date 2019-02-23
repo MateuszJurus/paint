@@ -31,15 +31,20 @@
                     <div class="option option--brush" id="settingsBrush">
                         <label>
                             <span>Grubość: <span id="currentBrushWidth"></span></span>
-                            <input type="range" id="brushWidth" value="1" min="1" max="20">
+                            <input type="range" id="brushWidth" value="1" min="1" max="100">
                         </label>
                     </div>
                     <div class="option option--hidden option--line" id="settingsLine"></div>
-                    <div class="option option--hidden option--circle" id="settingsCircle"></div>
+                    <div class="option option--hidden option--circle" id="settingsCircle">
+                            <label>
+                                <span>Wypełnienie</span>
+                                <input type="checkbox" id="circleFill">
+                            </label>
+                    </div>
                     <div class="option option--hidden option--rectangle" id="settingsRectangle">
                         <label>
                             <span>Wypełnienie</span>
-                            <input type="checkbox" id="rectFill" value="true">
+                            <input type="checkbox" id="rectFill">
                         </label>
                     </div>
             </div>
