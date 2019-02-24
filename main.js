@@ -68,15 +68,6 @@ widthInput.addEventListener('input', ()=>{
     brushWidth = widthInput.value;
 })
 
-const currentLineWidth = document.getElementById('currentLineWidth');
-const lineWidthInput = document.getElementById('lineWidth');
-let lineWidth = 1;
-currentLineWidth.innerText = lineWidthInput.value;
-lineWidthInput.addEventListener('input', ()=>{
-    currentLineWidth.innerText = lineWidthInput.value;
-    lineWidth = lineWidthInput.value;
-})
-
 /* DISPLAY NUMBER OF LAYERS */
 
 const layerN = document.getElementById('layerCount');
@@ -154,6 +145,11 @@ class Canvas{
         lineOutline.style.transform = 'rotate(' + (Math.atan2(eY - sY, eX - sX) * 180 / Math.PI) + 'deg)';
         lineOutline.style.width = Math.floor(Math.sqrt(Math.pow(sX-eX,2)+Math.pow(sY-eY,2))) + 'px';
     }
+    drawLine(sX,sY,eX,eY){
+        this.ctx.moveTo(sX,sY);
+        this.ctx.lineTo(eX,eY);
+        this.ctx.stroke();
+    }
     drawRect(sX,sY,eX,eY){
         let rectFill = document.getElementById('rectFill');
         if(rectFill.checked){
@@ -165,10 +161,10 @@ class Canvas{
             this.ctx.strokeRect(sX,sY,eX-sX,eY-sY);
         }        
     }
-    drawBrush(sX,sY,w){
+    drawBrush(sX,sY){
         this.ctx.fillStyle = color;
         this.ctx.beginPath();
-        this.ctx.arc(sX, sY, w, 0, 2 * Math.PI);
+        this.ctx.arc(sX, sY, brushWidth, 0, 2 * Math.PI);
         this.ctx.fill();
     }
     drawCircle(sX,sY,eX,eY){
@@ -189,30 +185,64 @@ function newFile(){
     cOutline.classList.add('circle__outline');
     let lineOutline = document.createElement('span');
     lineOutline.classList.add('line__outline');
-    x.c.addEventListener('mousedown', function(){
+
+    let layerList = new Array();
+    let layerLength = 0;
+
+    x.c.addEventListener('mousedown', onPress);
+    x.c.addEventListener('mouseup', onRelease);
+    x.c.addEventListener('mousemove', onMove);
+    canvasCount++;
+    displayLayerN();
+    /* ON MOUSE PRESS FUNCTION*/
+    function onPress(){
         isPress = 1;
-        initX = mousePosition.x;
-        initY = mousePosition.y;
-        switch(currentTool){
-            case 1:
-                x.drawBrush(initX,initY,brushWidth,color)
-                break;
-            case 2:
-                app.appendChild(lineOutline);
-                break;
-            case 3:
-                app.appendChild(cOutline);
-                break;
-            case 4:
-                app.appendChild(outline);   
-                break;
-        }
-    })
-    x.c.addEventListener('mouseup', function(){
+            initX = mousePosition.x;
+            initY = mousePosition.y;
+            switch(currentTool){
+                case 1:
+                    x.drawBrush(initX,initY,color)
+                    break;
+                case 2:
+                    app.appendChild(lineOutline);
+                    break;
+                case 3:
+                    app.appendChild(cOutline);
+                    break;
+                case 4:
+                    app.appendChild(outline);   
+                    break;
+            }
+    }
+    /* ON MOUSE MOVE FUNCTION*/
+    function onMove(){
+        //check if mouse button is pressed
+        if(isPress != 0){
+            switch(currentTool){
+                 case 1:
+                     initX = mousePosition.x;
+                     initY = mousePosition.y;
+                     x.drawBrush(initX,initY,brushWidth)
+                     break;
+                 case 2:
+                     x.drawLineOutline(lineOutline,initX,initY,mousePosition.x,mousePosition.y)
+                 case 3:
+                     x.drawCircleOutline(cOutline,initX,initY,mousePosition.x,mousePosition.y);
+                     break;
+                 case 4:
+                     x.drawRectOutline(outline,initX,initY,mousePosition.x,mousePosition.y);
+                     break;
+            }
+         }
+    }
+    /* ON MOUSE RELEASE FUNCTION*/
+    function onRelease(){
         isPress = 0;
         switch(currentTool){
             case 2:
                 app.removeChild(lineOutline);
+                x.drawLine(initX,initY,mousePosition.x,mousePosition.y)
+                x.drawLine(0,0,0,0);
                 break;
             case 3:
                 app.removeChild(cOutline);
@@ -224,30 +254,13 @@ function newFile(){
                 x.drawRect(initX,initY,mousePosition.x,mousePosition.y);
                 x.drawRectOutline(outline,0,0,0,0);
                 break;
-        }
-    })
-    x.c.addEventListener('mousemove', function(){
-        //check if mouse button is pressed
-        if(isPress != 0){
-           switch(currentTool){
-                case 1:
-                    initX = mousePosition.x;
-                    initY = mousePosition.y;
-                    x.drawBrush(initX,initY,brushWidth)
-                    break;
-                case 2:
-                    x.drawLineOutline(lineOutline,initX,initY,mousePosition.x,mousePosition.y,lineWidth)
-                case 3:
-                    x.drawCircleOutline(cOutline,initX,initY,mousePosition.x,mousePosition.y);
-                    break;
-                case 4:
-                    x.drawRectOutline(outline,initX,initY,mousePosition.x,mousePosition.y);
-                    break;
-           }
-        }
-    })
-    canvasCount++;
-    displayLayerN();
+        };
+        layerList[layerLength] = new Canvas('file__layer', 'canvas'+layerList.length);
+        layerList[layerLength].c.addEventListener('mousedown', onPress);
+        layerList[layerLength].c.addEventListener('mouseup', onRelease);
+        layerList[layerLength].c.addEventListener('mousemove', onMove);
+        layerLength++;
+    }
 } 
 
 /* remove previous canvas if there are any */
@@ -260,3 +273,7 @@ function clearFile(){
     }
     canvasCount = 0;
 }
+
+
+/* */
+

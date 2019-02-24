@@ -15,14 +15,20 @@
     flex-flow:row nowrap;
 }
 
-.button--new{
-    background: var(--green);
+.button{
     padding: 10px 20px;
     border:none;
     cursor:pointer;
     width:100px;
 }
 
+.button--new{
+    background: var(--green);
+}
+
+.button--back{
+    
+}
 
 /* SIDEMENU */
 
@@ -89,6 +95,13 @@
     z-index: 99;
 }
 
+.file__layer{
+    position:absolute;
+    z-index: 2;
+    top:0;
+    left:0;
+}
+
 .file__canvas{
     position: absolute;
     background: white;
@@ -117,7 +130,6 @@
 .line__outline{
     position:absolute;
     border:solid 1px;
-    border-radius:10px;
     height:1px;
     transform-origin:0;
     pointer-events: none;
