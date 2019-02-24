@@ -113,3 +113,12 @@
 .circle__outline{
     border-radius:100%;
 }
+
+.line__outline{
+    position:absolute;
+    border:solid 1px;
+    border-radius:10px;
+    height:1px;
+    transform-origin:0;
+    pointer-events: none;
+}

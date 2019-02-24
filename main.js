@@ -113,7 +113,36 @@ class Canvas{
             outline.style.top = sY + 'px';
             outline.style.height = Math.abs(sY-eY) + 'px';
         }
-        
+    }
+    drawCircleOutline(cOutline,sX,sY,eX,eY){
+        cOutline.style.borderColor = color;
+        if(circleFill.checked){
+            cOutline.style.backgroundColor = color;
+        }else{
+            cOutline.style.backgroundColor = 'transparent';
+        }
+        if(sX > eX){
+            cOutline.style.left = eX + 'px';
+            cOutline.style.width = Math.abs(sX-eX) + 'px';
+        }else{
+            cOutline.style.left = sX + 'px';
+            cOutline.style.width = Math.abs(sX-eX) + 'px';
+        }
+        if(sY > eY){
+            cOutline.style.top = eY + 'px';
+            cOutline.style.height = Math.abs(eY-sY) + 'px';
+        }else{
+            cOutline.style.top = sY + 'px';
+            cOutline.style.height = Math.abs(sY-eY) + 'px';
+        }
+    }
+    drawLineOutline(lineOutline,sX,sY,eX,eY){
+        lineOutline.style.top = sY + 'px';
+        lineOutline.style.left = sX + 'px';
+        lineOutline.style.borderColor = color;
+        lineOutline.style.backgroundColor = color;
+        lineOutline.style.transform = 'rotate(' + (Math.atan2(eY - sY, eX - sX) * 180 / Math.PI) + 'deg)';
+        lineOutline.style.width = Math.floor(Math.sqrt(Math.pow(sX-eX,2)+Math.pow(sY-eY,2))) + 'px';
     }
     drawRect(sX,sY,eX,eY){
         let rectFill = document.getElementById('rectFill');
@@ -134,10 +163,6 @@ class Canvas{
     }
     drawCircle(sX,sY,eX,eY){
         let circleFill = document.getElementById('circleFill');
-        if(circleFill.checked){
-            this.ctx.beginPath();
-            this.ctx.arc(sX,sY,eX-sX,eY-sY);
-        }
     }
 }
 
@@ -152,6 +177,8 @@ function newFile(){
     outline.classList.add('rectangle__outline');
     let cOutline = document.createElement('span');
     cOutline.classList.add('circle__outline');
+    let lineOutline = document.createElement('span');
+    lineOutline.classList.add('line__outline');
     x.c.addEventListener('mousedown', function(){
         isPress = 1;
         initX = mousePosition.x;
@@ -159,6 +186,9 @@ function newFile(){
         switch(currentTool){
             case 1:
                 x.drawBrush(initX,initY,brushWidth,color)
+                break;
+            case 2:
+                app.appendChild(lineOutline);
                 break;
             case 3:
                 app.appendChild(cOutline);
@@ -171,10 +201,13 @@ function newFile(){
     x.c.addEventListener('mouseup', function(){
         isPress = 0;
         switch(currentTool){
+            case 2:
+                app.removeChild(lineOutline);
+                break;
             case 3:
                 app.removeChild(cOutline);
                 x.drawCircle(initX,initY,mousePosition.x,mousePosition.y);
-                x.drawRectOutline(cOutline,0,0,0,0);
+                x.drawCircleOutline(cOutline,0,0,0,0);
                 break;
             case 4:
                 app.removeChild(outline);
@@ -192,8 +225,10 @@ function newFile(){
                     initY = mousePosition.y;
                     x.drawBrush(initX,initY,brushWidth)
                     break;
+                case 2:
+                    x.drawLineOutline(lineOutline,initX,initY,mousePosition.x,mousePosition.y)
                 case 3:
-                    x.drawRectOutline(cOutline,initX,initY,mousePosition.x,mousePosition.y);
+                    x.drawCircleOutline(cOutline,initX,initY,mousePosition.x,mousePosition.y);
                     break;
                 case 4:
                     x.drawRectOutline(outline,initX,initY,mousePosition.x,mousePosition.y);
