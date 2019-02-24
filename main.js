@@ -173,11 +173,13 @@ function newFile(){
         switch(currentTool){
             case 3:
                 app.removeChild(cOutline);
-                x.drawCircle(initX,initY,mousePosition.x,mousePosition.y)
+                x.drawCircle(initX,initY,mousePosition.x,mousePosition.y);
+                x.drawRectOutline(cOutline,0,0,0,0);
                 break;
             case 4:
                 app.removeChild(outline);
                 x.drawRect(initX,initY,mousePosition.x,mousePosition.y);
+                x.drawRectOutline(outline,0,0,0,0);
                 break;
         }
     })
@@ -191,7 +193,7 @@ function newFile(){
                     x.drawBrush(initX,initY,brushWidth)
                     break;
                 case 3:
-                    x.drawRectOutline(cOutline,initX,initY,mousePosition.x,mousePosition.y)
+                    x.drawRectOutline(cOutline,initX,initY,mousePosition.x,mousePosition.y);
                     break;
                 case 4:
                     x.drawRectOutline(outline,initX,initY,mousePosition.x,mousePosition.y);
