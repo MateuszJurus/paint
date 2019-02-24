@@ -163,6 +163,22 @@ class Canvas{
     }
     drawCircle(sX,sY,eX,eY){
         let circleFill = document.getElementById('circleFill');
+        if(eX > sX && eY > sY){
+            this.ctx.ellipse(sX+(Math.abs(sX-eX)/2),sY+(Math.abs(sY-eY)/2),(Math.abs(eX-sX))/2,(Math.abs(eY-sY))/2, 0, 0, Math.PI*2);
+        }else if(eX > sX && eY < sY){
+            this.ctx.ellipse(sX+(Math.abs(sX-eX)/2),sY-(Math.abs(sY-eY)/2),(Math.abs(eX-sX))/2,(Math.abs(eY-sY))/2, 0, 0, Math.PI*2);
+        }else if(eX < sX && eY > sY){
+            this.ctx.ellipse(sX-(Math.abs(sX-eX)/2),sY+(Math.abs(sY-eY)/2),(Math.abs(eX-sX))/2,(Math.abs(eY-sY))/2, 0, 0, Math.PI*2);
+        }else{
+            this.ctx.ellipse(sX-(Math.abs(sX-eX)/2),sY-(Math.abs(sY-eY)/2),(Math.abs(eX-sX))/2,(Math.abs(eY-sY))/2, 0, 0, Math.PI*2);
+        }
+        if(circleFill.checked){
+            this.ctx.fillStyle = color;
+            this.ctx.fill();
+        }else{
+            this.ctx.strokeStyle = color;
+            this.ctx.stroke();
+        }
     }
 }
 
