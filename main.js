@@ -94,6 +94,11 @@ class Canvas{
     }
     drawRectOutline(outline,sX,sY,eX,eY){
         outline.style.borderColor = color;
+        if(rectFill.checked){
+            outline.style.backgroundColor = color;
+        }else{
+            outline.style.backgroundColor = 'transparent';
+        }
         if(sX > eX){
             outline.style.left = eX + 'px';
             outline.style.width = Math.abs(sX-eX) + 'px';
@@ -108,6 +113,7 @@ class Canvas{
             outline.style.top = sY + 'px';
             outline.style.height = Math.abs(sY-eY) + 'px';
         }
+        
     }
     drawRect(sX,sY,eX,eY){
         let rectFill = document.getElementById('rectFill');
