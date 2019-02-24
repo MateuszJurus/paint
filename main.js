@@ -68,6 +68,15 @@ widthInput.addEventListener('input', ()=>{
     brushWidth = widthInput.value;
 })
 
+const currentLineWidth = document.getElementById('currentLineWidth');
+const lineWidthInput = document.getElementById('lineWidth');
+let lineWidth = 1;
+currentLineWidth.innerText = lineWidthInput.value;
+lineWidthInput.addEventListener('input', ()=>{
+    currentLineWidth.innerText = lineWidthInput.value;
+    lineWidth = lineWidthInput.value;
+})
+
 /* DISPLAY NUMBER OF LAYERS */
 
 const layerN = document.getElementById('layerCount');
@@ -136,11 +145,12 @@ class Canvas{
             cOutline.style.height = Math.abs(sY-eY) + 'px';
         }
     }
-    drawLineOutline(lineOutline,sX,sY,eX,eY){
+    drawLineOutline(lineOutline,sX,sY,eX,eY,w){
         lineOutline.style.top = sY + 'px';
         lineOutline.style.left = sX + 'px';
         lineOutline.style.borderColor = color;
         lineOutline.style.backgroundColor = color;
+        lineOutline.style.height = w + 'px';
         lineOutline.style.transform = 'rotate(' + (Math.atan2(eY - sY, eX - sX) * 180 / Math.PI) + 'deg)';
         lineOutline.style.width = Math.floor(Math.sqrt(Math.pow(sX-eX,2)+Math.pow(sY-eY,2))) + 'px';
     }
@@ -226,7 +236,7 @@ function newFile(){
                     x.drawBrush(initX,initY,brushWidth)
                     break;
                 case 2:
-                    x.drawLineOutline(lineOutline,initX,initY,mousePosition.x,mousePosition.y)
+                    x.drawLineOutline(lineOutline,initX,initY,mousePosition.x,mousePosition.y,lineWidth)
                 case 3:
                     x.drawCircleOutline(cOutline,initX,initY,mousePosition.x,mousePosition.y);
                     break;
