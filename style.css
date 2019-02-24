@@ -27,7 +27,7 @@
 }
 
 .button--back{
-    
+    background: var(--lightgrey)
 }
 
 /* SIDEMENU */
@@ -87,12 +87,6 @@
     top:45%;
     text-align: center;
     width:100%;
-}
-
-.file__layers{
-    position:absolute;
-    right:15px;
-    z-index: 99;
 }
 
 .file__layer{

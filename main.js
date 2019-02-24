@@ -68,14 +68,6 @@ widthInput.addEventListener('input', ()=>{
     brushWidth = widthInput.value;
 })
 
-/* DISPLAY NUMBER OF LAYERS */
-
-const layerN = document.getElementById('layerCount');
-function displayLayerN(){
-    layerN.innerText = canvasCount;
-}
-displayLayerN();
-
 /* --- CREATING NEW CANVAS --- */
 
 class Canvas{
