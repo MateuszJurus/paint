@@ -1,5 +1,4 @@
 const app = document.getElementById('file');
-let canvasCount = 0;
 let currentTool = 1;
 /* --- TRACK MOUSE POSITION --- */
 let mousePosition = {
@@ -138,8 +137,11 @@ class Canvas{
         lineOutline.style.width = Math.floor(Math.sqrt(Math.pow(sX-eX,2)+Math.pow(sY-eY,2))) + 'px';
     }
     drawLine(sX,sY,eX,eY){
+        this.ctx.strokeStyle = color;
+        this.ctx.beginPath();
         this.ctx.moveTo(sX,sY);
         this.ctx.lineTo(eX,eY);
+        this.ctx.closePath();   
         this.ctx.stroke();
     }
     drawRect(sX,sY,eX,eY){
@@ -165,8 +167,12 @@ class Canvas{
 }
 
 /* create canvas and append to dom */
+
+let layerList = new Array();
+let layerLength = 0;
+layerList[layerLength] = new Canvas('file__layer', 'canvas'+layerList.length);
 function newFile(){
-    clearFile();
+    clearFile();        
     const x = new Canvas('file__canvas', 'base');
     let isPress = 0;
     let initX = 0;
@@ -177,23 +183,20 @@ function newFile(){
     cOutline.classList.add('circle__outline');
     let lineOutline = document.createElement('span');
     lineOutline.classList.add('line__outline');
-
-    let layerList = new Array();
-    let layerLength = 0;
-
     x.c.addEventListener('mousedown', onPress);
     x.c.addEventListener('mouseup', onRelease);
     x.c.addEventListener('mousemove', onMove);
-    canvasCount++;
-    displayLayerN();
-    /* ON MOUSE PRESS FUNCTION*/
+    let base = document.getElementById('base');
+    let event = new Event('mouseup');
+    base.dispatchEvent(event)
+    /* ON MOUSE PRESS FUNCTION */
     function onPress(){
         isPress = 1;
             initX = mousePosition.x;
             initY = mousePosition.y;
             switch(currentTool){
                 case 1:
-                    x.drawBrush(initX,initY,color)
+                layerList[layerLength].drawBrush(initX,initY,color)
                     break;
                 case 2:
                     app.appendChild(lineOutline);
@@ -214,15 +217,15 @@ function newFile(){
                  case 1:
                      initX = mousePosition.x;
                      initY = mousePosition.y;
-                     x.drawBrush(initX,initY,brushWidth)
+                     layerList[layerLength].drawBrush(initX,initY,brushWidth)
                      break;
                  case 2:
-                     x.drawLineOutline(lineOutline,initX,initY,mousePosition.x,mousePosition.y)
+                 layerList[layerLength].drawLineOutline(lineOutline,initX,initY,mousePosition.x,mousePosition.y)
                  case 3:
-                     x.drawCircleOutline(cOutline,initX,initY,mousePosition.x,mousePosition.y);
+                 layerList[layerLength].drawCircleOutline(cOutline,initX,initY,mousePosition.x,mousePosition.y);
                      break;
                  case 4:
-                     x.drawRectOutline(outline,initX,initY,mousePosition.x,mousePosition.y);
+                 layerList[layerLength].drawRectOutline(outline,initX,initY,mousePosition.x,mousePosition.y);
                      break;
             }
          }
@@ -233,39 +236,44 @@ function newFile(){
         switch(currentTool){
             case 2:
                 app.removeChild(lineOutline);
-                x.drawLine(initX,initY,mousePosition.x,mousePosition.y)
-                x.drawLine(0,0,0,0);
+                layerList[layerLength].drawLine(initX,initY,mousePosition.x,mousePosition.y)
+                layerList[layerLength].drawLine(0,0,0,0);
                 break;
             case 3:
                 app.removeChild(cOutline);
-                x.drawCircle(initX,initY,mousePosition.x,mousePosition.y);
-                x.drawCircleOutline(cOutline,0,0,0,0);
+                layerList[layerLength].drawCircle(initX,initY,mousePosition.x,mousePosition.y);
+                layerList[layerLength].drawCircleOutline(cOutline,0,0,0,0);
                 break;
             case 4:
-                app.removeChild(outline);
-                x.drawRect(initX,initY,mousePosition.x,mousePosition.y);
-                x.drawRectOutline(outline,0,0,0,0);
+                layerList[layerLength].drawRect(initX,initY,mousePosition.x,mousePosition.y);
+                layerList[layerLength].drawRectOutline(outline,0,0,0,0);
                 break;
         };
+        layerLength++;
         layerList[layerLength] = new Canvas('file__layer', 'canvas'+layerList.length);
         layerList[layerLength].c.addEventListener('mousedown', onPress);
         layerList[layerLength].c.addEventListener('mouseup', onRelease);
         layerList[layerLength].c.addEventListener('mousemove', onMove);
-        layerLength++;
     }
 } 
 
 /* remove previous canvas if there are any */
 function clearFile(){
     let c = document.getElementsByTagName('canvas');
-    if(c.length != 0){
+    while(c.length != 0){
         for(let i = 0; i < c.length; i++){
             c[i].parentNode.removeChild(c[i]);
         }
     }
-    canvasCount = 0;
 }
 
 
-/* */
+/* UNDO PREVIOUS ACTION */
 
+function undo(){
+    let cList = document.getElementsByTagName('canvas');
+    let l = cList.length;
+    if(cList[l-2]){
+        cList[l-2].remove();
+    }
+}
