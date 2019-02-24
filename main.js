@@ -67,6 +67,32 @@ widthInput.addEventListener('input', ()=>{
     brushWidth = widthInput.value;
 })
 
+/* DISPLAY GRADIENT PICKER */
+
+const rectFill = document.getElementById('rectFill');
+const rectGradientWrapper = document.getElementById('rectGradientControls');
+const rectGradient = document.getElementById('rectGradient');
+const rectGradientColorWrapper = document.getElementById ('rectGradientColorWrapper');
+rectFill.addEventListener('click',()=>{
+    if(rectFill.checked){
+        rectGradientControls.classList.remove('hidden');
+    }else{
+        rectGradientControls.classList.add('hidden')
+    }
+})
+rectGradient.addEventListener('click',()=>{
+    if(rectGradient.checked){
+        rectGradientColorWrapper.classList.remove('hidden');
+    }else{
+        rectGradientColorWrapper.classList.add('hidden')
+    }
+})
+const rectGradientPicker = document.getElementById('rectGradientColor');
+let rectGradientColor = '';
+rectGradientPicker.addEventListener('change', ()=>{
+    rectGradientColor = rectGradientPicker.value;
+})
+
 /* --- CREATING NEW CANVAS --- */
 
 class Canvas{
@@ -145,11 +171,16 @@ class Canvas{
         this.ctx.stroke();
     }
     drawRect(sX,sY,eX,eY){
-        let rectFill = document.getElementById('rectFill');
         if(rectFill.checked){
-            this.ctx.fillStyle = color;
+            if(rectGradient.checked){
+                let grad = this.ctx.createLinearGradient(0,0,0,eY);
+                grad.addColorStop(0, color);
+                grad.addColorStop(1, rectGradientColor);
+                this.ctx.fillStyle = grad;
+            }else{
+                this.ctx.fillStyle = color;   
+            }
             this.ctx.fillRect(sX,sY,eX-sX,eY-sY);
-            
         }else{
             this.ctx.strokeStyle = color;
             this.ctx.strokeRect(sX,sY,eX-sX,eY-sY);
