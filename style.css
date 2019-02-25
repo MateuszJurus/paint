@@ -6,13 +6,17 @@
 *{
     margin:0;
     padding:0;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     text-decoration: none;
 }
 
 .app{
     display:block;
-    flex-flow:row nowrap;
+    -webkit-box-orient:horizontal;
+    -webkit-box-direction:normal;
+        -ms-flex-flow:row nowrap;
+            flex-flow:row nowrap;
 }
 
 .button{
@@ -126,7 +130,9 @@
     position:absolute;
     border:solid 1px;
     height:1px;
-    transform-origin:0;
+    -webkit-transform-origin:0;
+        -ms-transform-origin:0;
+            transform-origin:0;
     pointer-events: none;
 }
 
